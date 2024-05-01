@@ -20,3 +20,34 @@ export const getURL = (path: string = '') => {
 	// Concatenate the URL and the path.
 	return path ? `${url}/${path}` : url
 }
+
+const toastKeyMap = {
+	blank: 'message',
+	error: 'error',
+	success: 'success',
+} as const
+
+const getToastRedirect = (
+	path: string,
+	type: keyof typeof toastKeyMap,
+	message: string,
+	disableButton: boolean = false,
+	arbitraryParams: string = ''
+) => {
+	const key = toastKeyMap[type]
+
+	let redirectPath = `${path}?${key}=${encodeURIComponent(message)}`
+	if (disableButton) redirectPath += '&disable_button=true'
+	if (arbitraryParams) redirectPath += `&${arbitraryParams}`
+
+	return redirectPath
+}
+
+export const getBlankRedirect = (path: string, message: string = '', disableButton: boolean = false, arbitraryParams: string = '') =>
+	getToastRedirect(path, 'blank', message, disableButton, arbitraryParams)
+
+export const getErrorRedirect = (path: string, message: string = '', disableButton: boolean = false, arbitraryParams: string = '') =>
+	getToastRedirect(path, 'error', message, disableButton, arbitraryParams)
+
+export const getSuccessRedirect = (path: string, message: string = '', disableButton: boolean = false, arbitraryParams: string = '') =>
+	getToastRedirect(path, 'success', message, disableButton, arbitraryParams)
