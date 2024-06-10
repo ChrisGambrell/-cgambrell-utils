@@ -1,3 +1,5 @@
+import { z } from 'zod'
+
 export function add(a: number, b: number): number {
 	return a + b
 }
@@ -51,3 +53,15 @@ export const getErrorRedirect = (path: string, message: string = '', disableButt
 
 export const getSuccessRedirect = (path: string, message: string = '', disableButton: boolean = false, arbitraryParams: string = '') =>
 	getToastRedirect(path, 'success', message, disableButton, arbitraryParams)
+
+// TODO: Need to add testing
+export const parseFormData = <T extends z.ZodTypeAny>(
+	formData: FormData,
+	schema: T
+): { data: z.infer<T>; errors?: undefined } | { data?: undefined; errors: z.inferFlattenedErrors<T>['fieldErrors'] } => {
+	const data = Object.fromEntries(formData)
+	const parsedData = schema.safeParse(data)
+
+	if (!parsedData.success) return { errors: parsedData.error.flatten().fieldErrors }
+	return { data: parsedData.data }
+}
