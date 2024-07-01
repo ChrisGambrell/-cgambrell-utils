@@ -1,3 +1,4 @@
+import * as React from 'react'
 import { z } from 'zod'
 
 export function add(a: number, b: number): number {
@@ -65,3 +66,8 @@ export const parseFormData = <T extends z.ZodTypeAny>(
 	if (!parsedData.success) return { errors: parsedData.error.flatten().fieldErrors }
 	return { data: parsedData.data }
 }
+
+export type Params = { [key: string]: string }
+export type SearchParams = { [key: string]: string | string[] | undefined }
+export type ServerProps = { params: Params; searchParams: SearchParams }
+export type LayoutProps = { children: React.ReactNode; params: Params }
