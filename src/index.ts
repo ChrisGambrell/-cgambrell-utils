@@ -71,3 +71,9 @@ export type Params = { [key: string]: string }
 export type SearchParams = { [key: string]: string | string[] | undefined }
 export type ServerProps = { params: Params; searchParams: SearchParams }
 export type LayoutProps = { children: React.ReactNode; params: Params }
+
+export const getSearchParam = (searchParam: SearchParams, key: string): string | undefined => {
+	const value = searchParam[key]
+	if (Array.isArray(value)) return value[0]
+	return value
+}
