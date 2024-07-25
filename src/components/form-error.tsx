@@ -1,5 +1,3 @@
-// TODO: Add tests for components
-
 import * as React from 'react'
 
 export function FormError({ value }: { value: string[] | undefined }) {
