@@ -1,4 +1,4 @@
-import * as React from 'react'
+import dayjs from 'dayjs'
 import { z } from 'zod'
 
 export function add(a: number, b: number): number {
@@ -30,30 +30,23 @@ const toastKeyMap = {
 	success: 'success',
 } as const
 
-const getToastRedirect = (
-	path: string,
-	type: keyof typeof toastKeyMap,
-	message: string,
-	disableButton: boolean = false,
-	arbitraryParams: string = ''
-) => {
+const getToastRedirect = (path: string, type: keyof typeof toastKeyMap, message: string, arbitraryParams: string = '') => {
 	const key = toastKeyMap[type]
 
 	let redirectPath = `${path}?${key}=${encodeURIComponent(message)}`
-	if (disableButton) redirectPath += '&disable_button=true'
 	if (arbitraryParams) redirectPath += `&${arbitraryParams}`
 
 	return redirectPath
 }
 
-export const getBlankRedirect = (path: string, message: string = '', disableButton: boolean = false, arbitraryParams: string = '') =>
-	getToastRedirect(path, 'blank', message, disableButton, arbitraryParams)
+export const getBlankRedirect = (path: string, message: string = '', arbitraryParams: string = '') =>
+	getToastRedirect(path, 'blank', message, arbitraryParams)
 
-export const getErrorRedirect = (path: string, message: string = '', disableButton: boolean = false, arbitraryParams: string = '') =>
-	getToastRedirect(path, 'error', message, disableButton, arbitraryParams)
+export const getErrorRedirect = (path: string, message: string = '', arbitraryParams: string = '') =>
+	getToastRedirect(path, 'error', message, arbitraryParams)
 
-export const getSuccessRedirect = (path: string, message: string = '', disableButton: boolean = false, arbitraryParams: string = '') =>
-	getToastRedirect(path, 'success', message, disableButton, arbitraryParams)
+export const getSuccessRedirect = (path: string, message: string = '', arbitraryParams: string = '') =>
+	getToastRedirect(path, 'success', message, arbitraryParams)
 
 // TODO: Need to add testing
 export const parseFormData = <T extends z.ZodTypeAny>(
@@ -68,12 +61,24 @@ export const parseFormData = <T extends z.ZodTypeAny>(
 }
 
 export type Params = { [key: string]: string }
+// BUG: There might be an issue with the SearchParams type and being undefined
 export type SearchParams = { [key: string]: string | string[] | undefined }
 export type ServerProps = { params: Params; searchParams: SearchParams }
 export type LayoutProps = { children: React.ReactNode; params: Params }
 
 export const getSearchParam = (searchParam: SearchParams, key: string): string | undefined => {
-	const value = searchParam[key]
+	const value = searchParam?.[key]
 	if (Array.isArray(value)) return value[0]
 	return value
 }
+
+export const getSearchParamDates = (searchParams: SearchParams, months: number) => {
+	const startDate = getSearchParam(searchParams, 'startDate')
+		? dayjs(getSearchParam(searchParams, 'startDate'))
+		: dayjs().subtract(months, 'months').startOf('month')
+	const endDate = getSearchParam(searchParams, 'endDate') ? dayjs(getSearchParam(searchParams, 'endDate')) : dayjs().endOf('month')
+
+	return { startDate, endDate }
+}
+
+export * from './components'
