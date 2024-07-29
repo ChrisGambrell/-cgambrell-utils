@@ -60,6 +60,17 @@ export const parseFormData = <T extends z.ZodTypeAny>(
 	return { data: parsedData.data }
 }
 
+export function parseSubForm(formData: FormData, prefix: string) {
+	const rawData = Object.fromEntries(formData)
+	const data = new FormData()
+
+	for (const [key, value] of Object.entries(rawData)) {
+		if (key.startsWith(`${prefix}.`)) data.set(key.replace(`${prefix}.`, ''), value)
+	}
+
+	return data
+}
+
 export type Params = { [key: string]: string }
 // BUG: There might be an issue with the SearchParams type and being undefined
 export type SearchParams = { [key: string]: string | string[] | undefined }
