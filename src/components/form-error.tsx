@@ -1,8 +1,8 @@
-import { useEffect } from 'react'
+import * as React from 'react'
 import toast from 'react-hot-toast'
 
 export function FormError({ hidden = false, value }: { hidden?: boolean; value: string[] | undefined }) {
-	useEffect(() => {
+	React.useEffect(() => {
 		if (!hidden) return
 		if (value?.length && value.length > 0) toast.error(`FATAL: ${value[0]}`)
 	}, [hidden, value])

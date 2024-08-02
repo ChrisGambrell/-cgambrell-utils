@@ -1,5 +1,5 @@
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import { useEffect } from 'react'
+import * as React from 'react'
 import toast, { Toaster } from 'react-hot-toast'
 
 export function GlobalToaster() {
@@ -7,7 +7,7 @@ export function GlobalToaster() {
 	const router = useRouter()
 	const searchParams = useSearchParams()
 
-	useEffect(() => {
+	React.useEffect(() => {
 		const message = searchParams.get('message')
 		const error = searchParams.get('error')
 		const success = searchParams.get('success')
