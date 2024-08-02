@@ -1,6 +1,3 @@
-'use client'
-export * from './components'
-
 import dayjs from 'dayjs'
 import { z } from 'zod'
 
@@ -94,3 +91,5 @@ export const getSearchParamDates = (searchParams: SearchParams, months: number) 
 
 	return { startDate, endDate }
 }
+
+export * from './components'
