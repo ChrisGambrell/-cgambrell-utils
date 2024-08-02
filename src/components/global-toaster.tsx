@@ -1,5 +1,4 @@
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
-import * as React from 'react'
 import { useEffect } from 'react'
 import toast, { Toaster } from 'react-hot-toast'
 

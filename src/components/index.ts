@@ -1,3 +1,3 @@
-// TODO: Add tests for components
 'use client'
+export * from './form-error'
 export * from './global-toaster'
