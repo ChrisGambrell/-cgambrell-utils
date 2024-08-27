@@ -60,7 +60,18 @@ export const parseFormData = <T extends z.ZodTypeAny>(
 	return { data: parsedData.data }
 }
 
-export function parseSubfield(formData: FormData, prefix: string) {
+export function parseSubData(formData: FormData, prefix: string) {
+	const rawData = Object.fromEntries(formData)
+	const data = new FormData()
+
+	for (const [key, value] of Object.entries(rawData)) {
+		if (key.startsWith(`${prefix}.`)) data.set(key.replace(`${prefix}.`, ''), value)
+	}
+
+	return data
+}
+
+export function parseSubFormData(formData: FormData, prefix: string) {
 	const rawData = Object.fromEntries(formData)
 	const data = new FormData()
 
