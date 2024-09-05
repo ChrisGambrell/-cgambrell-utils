@@ -1,4 +1,4 @@
-import dayjs from 'dayjs'
+import { endOfMonth, startOfMonth, subMonths } from 'date-fns'
 import { z } from 'zod'
 
 export function add(a: number, b: number): number {
@@ -95,10 +95,10 @@ export const getSearchParam = (searchParam: SearchParams, key: string): string |
 }
 
 export const getSearchParamDates = (searchParams: SearchParams, months: number) => {
-	const startDate = getSearchParam(searchParams, 'startDate')
-		? dayjs(getSearchParam(searchParams, 'startDate'))
-		: dayjs().subtract(months, 'months').startOf('month')
-	const endDate = getSearchParam(searchParams, 'endDate') ? dayjs(getSearchParam(searchParams, 'endDate')) : dayjs().endOf('month')
+	const startDate = !!getSearchParam(searchParams, 'startDate')
+		? new Date(getSearchParam(searchParams, 'startDate')!)
+		: startOfMonth(subMonths(new Date(), months))
+	const endDate = getSearchParam(searchParams, 'endDate') ? new Date(getSearchParam(searchParams, 'endDate')!) : endOfMonth(new Date())
 
 	return { startDate, endDate }
 }
