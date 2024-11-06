@@ -82,23 +82,24 @@ export function parseSubData(formData: FormData, prefix: string) {
 	return Object.fromEntries(data)
 }
 
-export type Params = { [key: string]: string }
+export type Params = Promise<{ [key: string]: string }>
 // BUG: There might be an issue with the SearchParams type and being undefined
-export type SearchParams = { [key: string]: string | string[] | undefined }
+export type SearchParams = Promise<{ [key: string]: string | string[] | undefined }>
 export type ServerProps = { params: Params; searchParams: SearchParams }
 export type LayoutProps = { children: React.ReactNode; params: Params }
 
-export const getSearchParam = (searchParam: SearchParams, key: string): string | undefined => {
-	const value = searchParam?.[key]
+export const getSearchParam = async (searchParam: SearchParams, key: string): Promise<string | undefined> => {
+	const value = (await searchParam)?.[key]
 	if (Array.isArray(value)) return value[0]
 	return value
 }
 
-export const getSearchParamDates = (searchParams: SearchParams, months: number) => {
-	const startDate = !!getSearchParam(searchParams, 'startDate')
-		? new Date(getSearchParam(searchParams, 'startDate')!)
-		: startOfMonth(subMonths(new Date(), months))
-	const endDate = getSearchParam(searchParams, 'endDate') ? new Date(getSearchParam(searchParams, 'endDate')!) : endOfMonth(new Date())
+export const getSearchParamDates = async (searchParams: SearchParams, months: number) => {
+	const startDateSearchParam = await getSearchParam(searchParams, 'startDate')
+	const endDateSearchParam = await getSearchParam(searchParams, 'endDate')
+
+	const startDate = !!startDateSearchParam ? new Date(startDateSearchParam) : startOfMonth(subMonths(new Date(), months))
+	const endDate = endDateSearchParam ? new Date(endDateSearchParam) : endOfMonth(new Date())
 
 	return { startDate, endDate }
 }
